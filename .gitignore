@@ -6,3 +6,4 @@ venv/
 .env
 .png
 __pycache__/
+report.txt
