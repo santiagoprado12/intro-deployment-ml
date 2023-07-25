@@ -1,0 +1,6 @@
+[core]
+    remote = dataset-track
+['remote "dataset-track"']
+    url = s3://model-dataset-tracker-sp/dataset/
+['remote "model-tracker"']
+    url = s3://model-dataset-tracker-sp/model/
