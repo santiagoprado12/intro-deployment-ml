@@ -57,6 +57,6 @@ jobs:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Used for github pages
         run: |
           cat report.txt >> report.md
-          cml-publish prediction_behaviour.png --md >> report.md
+          cml-publish prediction_behavior.png --md >> report.md
           cml-send-comment report.md
   
