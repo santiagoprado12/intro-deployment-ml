@@ -27,5 +27,5 @@ def get_model_performance_test_set(y_real: pd.Series, y_pred: pd.Series) -> None
     ax.set_title('behavior of model prediction')
     ax.set_xlabel('Predicted worldwide gross')
     ax.set_ylabel('Real worldwide gross')
-    fig.savefig('prediction behavior.png')
+    fig.savefig('prediction_behavior.png')
 
