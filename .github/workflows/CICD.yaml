@@ -1,0 +1,47 @@
+name: Contonuous Integration/Continuous Deployment
+on: 
+  push:
+    branches:
+      - main
+  workflow_run:
+    workflows: ["Continous Training"]
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch:
+    input:
+      reason:
+        description: 'Why to run this?'
+        required: false
+        default: running CI/CD
+permissions:
+  id-token: write # need this for OIDC  
+  contents: write
+  pull-requests: write 
+  issues: read
+  packages: none
+jobs:
+  ci_cd:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::949327828011:role/s3-dvc
+          role-session-name: api-testing
+          aws-region: us-east-1
+      - name: Creating and activating virtual environment
+        run: |
+          pip3 install virtualenv
+          virtualenv venv
+          source venv/bin/activate
+          pip install dvc[s3]
+          dvc pull model/model.pkl -r model-tracker
+      - name: Create Docker and push to ecr
+        run: |
+          aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ secrets.ECR_URL }}
+          docker build -t ${{ secrets.ECR_NAME }} .
+          docker tag ${{ secrets.ECR_NAME }}:latest ${{ secrets.ECR_URL }}/${{ secrets.ECR_NAME }}:latest
+          docker push ${{ secrets.ECR_URL }}/${{ secrets.ECR_NAME }}:latest
