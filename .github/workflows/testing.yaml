@@ -10,9 +10,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-region: us-east-1
           role-to-assume: arn:aws:iam::949327828011:role/s3-dvc
           role-session-name: api-testing
+          aws-region: us-east-1
       - name: Creating and activatin virtual environment
         run: |
           pip3 install virtualenv
