@@ -1,0 +1,33 @@
+name: Testing API
+on: [push, pull_request]
+
+jobs:
+  testing-api:
+    runs_on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-west-2
+      - name: Creating and activatin virtual environment
+        run: |
+          pip3 install virtualenv
+          virtualenv venv
+          source venv/bin/activate
+      - name: Installing dependencies
+        run: |
+          pip3 install dvc[s3]
+          pip3 install -r requirements_test.txt
+      - name: Test api
+        run: |
+          dvc pull model/model.pkl -r model-tracker
+          pytest tests.py
+      
