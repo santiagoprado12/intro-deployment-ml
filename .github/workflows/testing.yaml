@@ -29,5 +29,6 @@ jobs:
       - name: Test api
         run: |
           dvc pull model/model.pkl -r model-tracker
+          echo "downloaded model"
           pytest tests.py
       
