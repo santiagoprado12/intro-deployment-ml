@@ -24,7 +24,6 @@ jobs:
           virtualenv venv
           source venv/bin/activate
           pip install dvc[s3]
-          pip install -r requirements_test.txt
           dvc pull model/model.pkl -r model-tracker
           pytest tests.py
       - name: Create Docker and push to ecr
